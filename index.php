@@ -6,9 +6,7 @@ $f3->set('UI','views/');
 
 $f3->route('GET /', 
 	function($f3) {
-		$url=parse_url('mysql://b7171039c55598:b2e8bb66@us-cdbr-east-03.cleardb.com/heroku_87f7c241b70c126?reconnect=true');
-		var_dump($url);
-		
+		$url=parse_url('mysql://b7171039c55598:b2e8bb66@us-cdbr-east-03.cleardb.com/heroku_87f7c241b70c126?reconnect=true');		
 	    $server = $url["host"];
     	$username = $url["user"];
     	$password = $url["pass"];
