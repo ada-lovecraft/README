@@ -1,1 +1,13 @@
-{{ @name }}
+<html>
+	<head>
+	<title>
+		Hello, world!
+	</title>
+	</head>
+	<body>
+		{{ @name }}<br/>
+		<repeat group="{{ @latestPosts }}" value="{{ @post }}">
+		    <a href="#">{{ @post.title }}</a>
+		</repeat>
+	</body>
+</html>

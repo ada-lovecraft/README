@@ -6,7 +6,7 @@ $f3->set('UI','ui/');
 
 $f3->route('GET /', 
 	function($f3) {
-		/*
+		
 		$url=parse_url('mysql://b7171039c55598:b2e8bb66@us-cdbr-east-03.cleardb.com/heroku_87f7c241b70c126?reconnect=true');		
 	    $server = $url["host"];
     	$username = $url["user"];
@@ -23,10 +23,9 @@ $f3->route('GET /',
 		$posts=new DB\SQL\Mapper($db,'posts');
 		$latestPosts = $posts->find();
 		$f3->set('latestPosts',$latestPosts);
-	*/
+	
 		$f3->set('name','oreth');
-		echo View::instance()->render('views/index.htm');
-		
+		echo Template::instance()->render('views/index.htm');		
 	}
 );
 
