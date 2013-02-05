@@ -4,23 +4,34 @@ namespace Controllers;
 class BlogController {
 	
     static function show($f3) {
-				$url=parse_url('mysql://b7171039c55598:b2e8bb66@us-cdbr-east-03.cleardb.com/heroku_87f7c241b70c126?reconnect=true');		
-	    $server = $url["host"];
-    	$username = $url["user"];
-    	$password = $url["pass"];
-    	$db = substr($url["path"],1);
-            
-		$db=new \DB\SQL(
-		    'mysql:host='.$server.';port=3306;dbname='.$db,
-		    $username,
-			$password
-		);
-		$posts=new \DB\SQL\Mapper($db,'posts');
+    	$connection = \Helpers\DBConnector::getConnection();
+		$posts=new \DB\SQL\Mapper($connection,'posts');
 		$latestPosts = $posts->find();
 		$f3->set('latestPosts',$latestPosts);
-	
 		$f3->set('name','oreth');
 		echo \Template::instance()->render('views/index.htm');		
-		}
+	}
+
+	static function create($f3) {
+		echo \Template::instance()->render('views/admin/create.htm');		
+	}
+
+	static function createPost($f3) {
+		$connection = \Helpers\DBConnector::getConnection();
+		$post=new \DB\SQL\Mapper($connection,'posts');
+		$post->title = $f3->get('POST.title');
+		$post->body = $f3->get('POST.body');
+		$post->save();
+	}
+
+
+
+	static function test() {
+		echo "Name is: " . $params['name'];
+
+		//echo \Template::instance()->render('views/index.htm');		
+	}
+
+
 }
 ?>
