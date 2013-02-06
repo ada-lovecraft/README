@@ -1,8 +1,8 @@
 <?php
 
-namespace Helpers;
+namespace Services;
 
-class DBConnector {
+class DBService {
 	
 	private static $connection = null;
 

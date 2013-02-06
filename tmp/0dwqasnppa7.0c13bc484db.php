@@ -1,3 +1,4 @@
+<base href="<?php echo Utils::getBaseUrl(); ?>"/>
 <html>
 	<head>
 	<title>
