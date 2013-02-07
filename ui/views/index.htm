@@ -166,6 +166,9 @@
 	    		case 'touch':
 	    			touch(args.join(" "));
 	    			break;
+	    		case 'help':
+	    			help();
+	    			break;
 	    		default:
 	    			terminal.error("Command not recognized");
 	    			break;
@@ -205,10 +208,44 @@
   			contentType: 'application/json',
             dataType: 'json',
 		});
-		
 		//callback(username);
 	}
 
+	function help() {
+
+		var rpcCallback = function(response) {
+			tilda.terminal.echo(response.result);
+		};
+		sendrpc('help',rpcCallback);
+
+		
+	}
+
+
+
+	function sendrpc(method, callback, params) {
+		if (params == null) {
+			params = [];
+		}
+		var url = "rpc";
+		var request = $.json_stringify({
+           'jsonrpc': '2.0', 
+           'method': "help",
+           'params': params, 
+           'id': 1
+       });
+
+		$.ajax({
+  			type: "POST",
+  			url: url,
+  			data: request,
+  			success: callback,
+  			contentType: 'application/json',
+            dataType: 'json',
+		});
+
+
+	}
 	</script>
 
 </body>

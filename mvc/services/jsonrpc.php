@@ -129,9 +129,9 @@ class JSONRPC {
   				   "message"=>"Parse Error: no data"));
       } else {
         // json parse error
-        $error = json_error();
-        $id = extract_id();
-        echo response(null, $id, array("code"=> -32700,
+        $error = self::json_error();
+        $id = self::extract_id();
+        echo self::response(null, $id, array("code"=> -32700,
   				     "message"=>"Parse Error: $error"));
       }
       exit;
@@ -192,8 +192,9 @@ class JSONRPC {
           }
         } else {
           $url = "http://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-          $msg = 'PHP JSON-RPC - in "' . $url . "\"\n";
-          $msg .= "class \"$class\" has methods: " . implode(", ", array_slice($methods, 0, -1)) . " and " .  $methods[count($methods)-1] . ".";
+          //$msg = 'PHP JSON-RPC - in "' . $url . "\"\n";
+          sort($methods);
+          $msg = "The following commands are currently available: \n\n" . implode("\n", array_slice($methods, 0, -1)) . "\n" .  $methods[count($methods)-1];
           echo self::response($msg, $id, null);
         }
       } else if (!in_array($method, $methods)) {

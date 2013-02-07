@@ -26,8 +26,7 @@ class ReadmeRPC {
   }
 
   static $touch_documentation = "create a new post";
-  public function touch($username,$title) {
-    return var_dump(func_get_args());
+  public function touch() {
   }
 }
 
