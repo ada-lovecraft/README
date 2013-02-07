@@ -23,7 +23,6 @@ class UserService {
 		
 	}
 
-
 	public static function logout() {
 		self::$user = null;
 		self::$auth = null;

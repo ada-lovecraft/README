@@ -437,6 +437,22 @@ class Mapper extends \DB\Cursor {
 	}
 
 	/**
+		Return JSON array of rows of mapper object as an associative array
+		@return array
+		@param $obj object
+
+	function toJSON($obj=NULL) {
+		$rows = array();
+		array_map(
+			function($row) {
+				return $row['value' ];
+			},
+			$obj->fields+$obj->adhoc
+		);
+	}
+	**/
+
+	/**
 		Instantiate class
 		@param $db object
 		@param $table string

@@ -8,8 +8,20 @@ class BlogController {
 		$posts=new \DB\SQL\Mapper($connection,'posts');
 		$latestPosts = $posts->find();
 		$f3->set('latestPosts',$latestPosts);
-		$f3->set('name','oreth');
 		echo \Template::instance()->render('views/index.htm');		
+	}
+
+
+	static function getPosts($f3) {
+		$connection = \Services\DBService::getConnection();
+		$posts = new \DB\SQL\Mapper($connection,'posts');
+		$latest = $posts->load();
+		$postList = array();
+		for($i = 0; $i<$latest->count(); $i++) {
+			$postList[] = $latest->cast();
+			$latest->skip();
+		}
+		echo json_encode($postList);
 	}
 
 	static function create($f3) {
