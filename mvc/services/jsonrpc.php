@@ -69,14 +69,14 @@ class JSONRPC {
   // check if object has field
   function has_field($object, $field) {
     //return in_array($field, array_keys(get_object_vars($object)));
-    return array_key_exists($field, get_object_vars($object));
+    return \array_key_exists($field, \get_object_vars($object));
   }
 
   // ----------------------------------------------------------------------------
   // return object field if exist otherwise return default value
   function get_field($object, $field, $default) {
-    $array = get_object_vars($object);
-    if (isset($array[$field])) {
+    $array = \get_object_vars($object);
+    if (\isset($array[$field])) {
       return $array[$field];
     } else {
       return $default;
@@ -87,7 +87,7 @@ class JSONRPC {
   // ----------------------------------------------------------------------------
   //create json-rpc response
   function response($result, $id, $error) {
-    return json_encode(array("jsonrpc" => "2.0",
+    return \json_encode(array("jsonrpc" => "2.0",
   			   'result' => $result,
   			   'id' => $id,
   			   'error'=> $error));
@@ -97,7 +97,7 @@ class JSONRPC {
   // try to extract id from broken json
   function extract_id() {
     $regex = '/[\'"]id[\'"] *: *([0-9]*)/';
-    if (preg_match($regex, $GLOBALS['HTTP_RAW_POST_DATA'], $m)) {
+    if (\preg_match($regex, $GLOBALS['HTTP_RAW_POST_DATA'], $m)) {
       return $m[1];
     } else {
       return 0;
@@ -112,13 +112,13 @@ class JSONRPC {
     }
     */
     $input = $GLOBALS['HTTP_RAW_POST_DATA'];
-    $encoding = mb_detect_encoding($input, 'auto');
+    $encoding = \mb_detect_encoding($input, 'auto');
     //convert to unicode
     if ($encoding != 'UTF-8') {
-      $input = iconv($encoding, 'UTF-8', $input);
+      $input = \iconv($encoding, 'UTF-8', $input);
     }
-    $input = json_decode($input);
-    header('Content-Type: text/plain');
+    $input = \json_decode($input);
+    \header('Content-Type: text/plain');
 
     // handle Errors
     if (!$input) {
@@ -161,28 +161,28 @@ class JSONRPC {
       $params = array();
     }
     // if params is object change it to array
-    if (is_object($params)) {
-      if (count(get_object_vars($params)) == 0) {
+    if (\is_object($params)) {
+      if (\count(\get_object_vars($params)) == 0) {
         $params = array();
       } else {
-        $params = get_object_vars($params);
+        $params = \get_object_vars($params);
       }
     }
     
     // call Service Method
     try {
-      $class = get_class($object);
-      $methods = get_class_methods($class);
-      if (strcmp($method, 'help') == 0) {
-        if (count($params) > 0) {
+      $class = \get_class($object);
+      $methods = \get_class_methods($class);
+      if (\strcmp($method, 'help') == 0) {
+        if (\count($params) > 0) {
           if (!in_array($params[0], $methods)) {
             $no_method = 'There is no ' . $params[0] . ' method';
             throw new \Exception($no_method);
           } else {
-            $static = get_class_vars($class);
+            $static = \get_class_vars($class);
             $help_str_name = $params[0] . "_documentation";
             //throw new Exception(implode(", ", $static));
-            if (array_key_exists($help_str_name, $static)) {
+            if (\array_key_exists($help_str_name, $static)) {
               echo self::response($static[$help_str_name], $id, null);
             } else {
               throw new \Exception($method . " method has no documentation");
@@ -191,22 +191,22 @@ class JSONRPC {
         } else {
           $url = "http://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
           $msg = 'PHP JSON-RPC - in "' . $url . "\"\n";
-          $msg .= "class \"$class\" has methods: " . implode(", ", array_slice($methods, 0, -1)) . " and " .  $methods[count($methods)-1] . ".";
+          $msg .= "class \"$class\" has methods: " . \implode(", ", \array_slice($methods, 0, -1)) . " and " .  $methods[\count($methods)-1] . ".";
           echo self::response($msg, $id, null);
         }
-      } else if (!in_array($method, $methods)) {
+      } else if (!\in_array($method, $methods)) {
         $msg = 'There is no ' . $method . ' method';
-        echo self::response(null, $id, array("code" =>-32601, "message" => $msg));
+        echo self::response(null, $id, \array("code" =>-32601, "message" => $msg));
       } else {
         //throw new Exception('x -> ' . json_encode($params));
-        $result = call_user_func_array(array($object, $method), $params);
+        $result = \call_user_func_array(\array($object, $method), $params);
         echo self::response($result, $id, null);
       }
       exit;
     } catch (Exception $e) {
       //catch all exeption from user code
       $msg = "Internal error: " . $e->getMessage();
-      echo self::response(null, $id, array("code"=>-32603, "message"=>$msg));
+      echo self::response(null, $id, \array("code"=>-32603, "message"=>$msg));
     }
   }
 }
