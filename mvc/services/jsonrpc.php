@@ -112,7 +112,7 @@ class JSONRPC {
     }
     */
     $input = $GLOBALS['HTTP_RAW_POST_DATA'];
-    $encoding = mb_detect_encoding($input, 'auto');
+    $encoding = \mb_detect_encoding($input, 'auto');
     //convert to unicode
     if ($encoding != 'UTF-8') {
       $input = iconv($encoding, 'UTF-8', $input);
