@@ -65,6 +65,14 @@ class BlogController {
 		//echo \Template::instance()->render('views/index.htm');		
 	}
 
+	static function handlerpc($f3) {
+		$rpc = new \Services\JSONRPC();
+		$rpc->handle(new \Services\ReadmeRPC());
+	}
 
+	static function console($f3) {
+		//throw new \Exception("FARTS");
+		echo \Template::instance()->render('views/console.htm');		
+	}
 }
 ?>

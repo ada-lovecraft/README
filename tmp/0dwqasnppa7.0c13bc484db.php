@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<base href="{{ @\Utils::getBaseUrl()}}" />
+<base href="<?php echo @\Utils::getBaseUrl(); ?>" />
 <html lang="en">
 <head>
 	<meta charset="utf-8">
@@ -60,12 +60,12 @@
 						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum accumsan dui sit amet porttitor. Quisque tincidunt nisi ac nibh lacinia id pulvinar diam blandit. Donec lacus augue, rutrum ut adipiscing ac, tempor ac justo. Mauris ac lacus id mi ultricies malesuada. Quisque id malesuada eros. Duis ac metus purus. Vestibulum et lorem in odio commodo pellentesque. Etiam tempus leo sit amet mi venenatis dignissim. Phasellus cursus massa sit amet lectus sagittis nec venenatis odio consectetur. Donec gravida tincidunt congue.
 						</p>
 				 </article>
-				<repeat group="{{ @latestPosts }}" value="{{ @post }}">
+				<?php foreach (($latestPosts?:array()) as $post): ?>
 					<article >
-						<h1>{{ @post.title }}</h1>
-						<p>{{@post.body}}</p>
+						<h1><?php echo $post['title']; ?></h1>
+						<p><?php echo $post['body']; ?></p>
 				  	</article>
-			  	</repeat>
+			  	<?php endforeach; ?>
 			</div><!--/span-->
 		</div><!--/row-->
 	  	<hr>
