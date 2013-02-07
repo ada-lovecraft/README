@@ -22,7 +22,6 @@ class ReadmeRPC {
 
     return array("your User Agent" => $_SERVER["HTTP_USER_AGENT"],
                  "your IP" => $_SERVER['REMOTE_ADDR'],
-                 "your location" => $geo->location($_SERVER['REMOTE_ADDR'])["region_name"],
                  "you acces this from" => $_SERVER["HTTP_REFERER"]);
   }
 
