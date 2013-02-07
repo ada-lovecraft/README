@@ -112,11 +112,13 @@ class JSONRPC {
     }
     */
     $input = $GLOBALS['HTTP_RAW_POST_DATA'];
-    $encoding = \mb_detect_encoding($input, 'auto');
+    /* removed as I don't have the ability to use the mbstring libraries on heroku
+    $encoding = mb_detect_encoding($input, 'auto');
     //convert to unicode
     if ($encoding != 'UTF-8') {
       $input = iconv($encoding, 'UTF-8', $input);
     }
+    */
     $input = json_decode($input);
     header('Content-Type: text/plain');
 
