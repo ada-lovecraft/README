@@ -5,7 +5,14 @@
 .navbar .brand .byline {
 	font-size: smaller;
 }
-
+.readme-console {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1100;
+    border-top: 2px solid #333;
+}
 
 div#content article {
 	padding: 15px 45px 15px 45px;
@@ -32,3 +39,12 @@ div#content article h1 {
 	color: inherit;
 }
 
+div#readme-editor {
+	z-index: 1000;
+	position:fixed;
+	height:300px;
+	top:0px;
+	left:0px;
+	background-color: #413d43;
+	color: #aaa;
+}

@@ -30,7 +30,6 @@
 
 </head>
 <body>
-	<div id="tilda"></div>
 	<div class="navbar">
 		<div class="navbar-inner">
 			<div class="container-fluid">
@@ -74,6 +73,13 @@
 		</footer>
 	</div><!--/.fluid-container-->
 
+	<div class="hide container-fluid span12" id="readme-editor">
+		<div class="row-fluid">
+			<textarea id="entry" class="span6">entry window</textarea>
+			<textarea id="preview" class="span6">preview window</textarea>
+		</div>
+	</div>
+	<div id="readme-console"></div>
 
 	<!-- Le javascript
 	================================================== -->
@@ -93,6 +99,7 @@
 	<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-typeahead.js"></script>
 	<script src="ui/js/jquery.terminal-0.4.22.js"></script>
 	<script>
+
 	String.prototype.strip = function(char) {
 	    return this.replace(new RegExp("^" + char + "*"), '').
 	        replace(new RegExp(char + "*$"), '');
@@ -110,19 +117,19 @@
 
 
 	(function($) {
-	    $.fn.tilda = function(eval, options) {
-	        if ($('body').data('tilda')) {
-	            return $('body').data('tilda').terminal;
+	    $.fn.readmeConsole = function(eval, loginFunction, options) {
+	        if ($('body').data('readmeConsole')) {
+	            return $('body').data('readmeConsole').terminal;
 	        }
-	        this.addClass('tilda');
+	        this.addClass('readme-console');
 	        options = options || {};
 	        var settings = {
 	            prompt: '$ ',
-	            name: 'tilda',
-	            height: 200,
+	            name: 'readme',
+	            height: 100,
 	            enabled: false,
 	            greetings: 'README Console',
-	            login: readmeLogin
+	            login: loginFunction
 	        };
 	        if (options) {
 	            $.extend(settings, options);
@@ -141,7 +148,7 @@
 	                });
 	            }
 	        });
-	        $('body').data('tilda', this);
+	        $('body').data('readmeConsole', this);
 	        this.hide();
 	        return self;
 	    };
@@ -150,42 +157,22 @@
 	//--------------------------------------------------------------------------
 
 
-	var tilda = null;
-	jQuery(document).ready(function($) {
+	
 
-	    tilda = $('#tilda').tilda(function(input, terminal) {
-	    	//extract the command from the input
-	    	//and create an args string
-	    	var args = input.match(/\w+/g);
-	    	console.log("%o", terminal);
-	    	var command = args.shift();
-	    	switch(command) {
-	    		case 'login': 
-	    			terminal.logout();
-	    			break;
-	    		case 'touch':
-	    			touch(args.join(" "));
-	    			break;
-	    		case 'help':
-	    			help();
-	    			break;
-	    		default:
-	    			terminal.error("Command not recognized");
-	    			break;
-	    	}
-	   	});
-	});
-
-
-	function touch(title) {
+	var ReadmeConsole = function() {
+		this.terminal = null;
+	}
+	
+	ReadmeConsole.prototype.touch = function (title) {
 		console.log("title: " + title);
 		if (title != "") 
 			console.log("creating post: "  + title);
 		else 
 			console.log("creating empty post");
+		this.createTouch();
 	}
 
-	function readmeLogin(username, password, terminalCallback) {
+	ReadmeConsole.prototype.login = function(username, password, terminalCallback) {
 		var url = "rpc";
 		var request = $.json_stringify({
            'jsonrpc': '2.0', 
@@ -196,7 +183,7 @@
 		var rpcCallback = function(response) {
 			if (response.result != null) {
 				console.log("%o", tilda);
-				tilda.terminal.set_prompt(response.result + "@fond $ ");
+				this.terminal.set_prompt(response.result + "@fond $ ");
 			}
 			terminalCallback(response.result);			
 		};
@@ -211,26 +198,32 @@
 		//callback(username);
 	}
 
-	function help() {
-
+	ReadmeConsole.prototype.help = function() {
 		var rpcCallback = function(response) {
-			tilda.terminal.echo(response.result);
+			this.terminal.echo(response.result);
 		};
 		sendrpc('help',rpcCallback);
+	}
 
-		
+	ReadmeConsole.prototype.whoami= function() {
+		var callback = function (response) {
+			var results = response.result;
+			for(result in results)
+			this.terminal.echo(result + " : " + results[result]);
+		};
+		sendrpc('whoami', callback);
 	}
 
 
 
-	function sendrpc(method, callback, params) {
+	ReadmeConsole.prototype.sendrpc = function(method, callback, params) {
 		if (params == null) {
 			params = [];
 		}
 		var url = "rpc";
 		var request = $.json_stringify({
            'jsonrpc': '2.0', 
-           'method': "help",
+           'method': method,
            'params': params, 
            'id': 1
        });
@@ -243,9 +236,64 @@
   			contentType: 'application/json',
             dataType: 'json',
 		});
-
-
 	}
+
+
+	ReadmeConsole.prototype.createTouch = function() {
+		this.editor();
+	}
+
+	ReadmeConsole.prototype.editor = function(args) {
+		var editor = $('#readme-editor');
+		var bodyheight = $(document).height();
+    	$("#readme-editor").height(bodyheight-$('#tilda').height);
+		if (args[0] == "-h") 
+			$(editor).slideUp();
+		else {
+			$(editor).slideDown();
+		}
+
+	} 
+
+	var myConsole = new ReadmeConsole();
+
+	jQuery(document).ready(function($) {
+		$(window).resize(function() {
+    		var bodyheight = $(document).height();
+    		$("#readme-editor").height(bodyheight-$('#readme-console').height);
+    		    	console.log($('#readme-editor').height());
+
+    	});
+
+	    myConsole.terminal = $('#readme-console').readmeConsole(function(input, terminal) {
+	    	//extract the command from the input
+	    	//and create an args string
+	    	var args = input.match(/\S+/g);
+	    	console.log("%o", terminal);
+	    	var command = args.shift();
+	    	switch(command) {
+	    		case 'login': 
+	    			myConsole.terminal.logout();
+	    			break;
+	    		case 'touch':
+	    			myConsole.touch(args.join(" "));
+	    			break;
+	    		case 'help':
+	    			myConsole.help();
+	    			break;
+	    		case 'whoami':
+	    			myConsole.whoami();
+	    			break;
+	    		case 'editor':
+	    			myConsole.editor(args);
+	    			break;
+	    		default:
+	    			terminal.error("Command not recognized");
+	    			break;
+	    	}
+	   	});
+	});
+
 	</script>
 
 </body>
