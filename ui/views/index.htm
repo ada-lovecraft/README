@@ -202,7 +202,7 @@
 		var rpcCallback = function(response) {
 			this.terminal.echo(response.result);
 		};
-		sendrpc('help',rpcCallback);
+		this.sendrpc('help',rpcCallback);
 	}
 
 	ReadmeConsole.prototype.whoami= function() {
@@ -211,7 +211,7 @@
 			for(result in results)
 			this.terminal.echo(result + " : " + results[result]);
 		};
-		sendrpc('whoami', callback);
+		this.sendrpc('whoami', callback);
 	}
 
 
