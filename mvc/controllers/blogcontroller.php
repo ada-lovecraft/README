@@ -20,9 +20,9 @@ class BlogController {
 		}
 		
 		$f3->set('latestPosts',$list);
-		//echo \Template::instance()->render('views/index.htm');
 		*/
-		echo "show";		
+		echo \Template::instance()->render('views/index.htm');
+
 	}
 
 	static function login($f3) {
