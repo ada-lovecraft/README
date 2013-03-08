@@ -53,8 +53,9 @@ class BlogController {
 
 	static function afterRoute($f3)
 	{
-		/*
+		
 		$f3->set('SESSION.success',null);
+		/*
 		$f3->set('SESSION.fail',null);
 		*/
 	}
