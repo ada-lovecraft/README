@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<base href="http://debian-vm/fond/" />
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Bootstrap, from Twitter</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<!-- Le styles -->
+	<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">	
+	<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet">
+
+	<link href="ui/css/theme.css" rel="stylesheet">
+	<link href="ui/css/jquery.terminal.css" rel="stylesheet">
+
+	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<!-- Le fav and touch icons -->
+	<link rel="shortcut icon" href="http://twitter.github.com/bootstrap/assets/images/favicon.ico">
+	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="http://twitter.github.com/bootstrap/assets/images/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="http://twitter.github.com/bootstrap/assets/images/apple-touch-icon-114x114.png">
+	<script src="ui/js/json2.js"></script>
+	<script src="ui/js/underscore-min.js"></script>
+
+</head>
+<body>
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" href="#">README <span class="byline"> a blog platform for developers</span></a>		
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="span2">
+				<div class="well sidebar-nav">
+					<ul class="nav nav-list">
+						<li><a href="#">Archive</a></li>
+														<li><a href="#loginModal" role="button"  data-toggle="modal">Login</a></li>
+							
+												<!-- page list -->
+					</ul>
+				</div><!--/.well -->
+			</div><!--/span-->
+			<div class="span10" id="content">
+								<article >
+						<h1>Example Post</h1>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum accumsan dui sit amet porttitor. Quisque tincidunt nisi ac nibh lacinia id pulvinar diam blandit. Donec lacus augue, rutrum ut adipiscing ac, tempor ac justo. Mauris ac lacus id mi ultricies malesuada. Quisque id malesuada eros. Duis ac metus purus. Vestibulum et lorem in odio commodo pellentesque. Etiam tempus leo sit amet mi venenatis dignissim. Phasellus cursus massa sit amet lectus sagittis nec venenatis odio consectetur. Donec gravida tincidunt congue.
+						</p>
+				 </article>
+									<article >
+						<h1>First Post</h1>
+						<p>FIRST!</p>
+				  	</article>
+			  						<article >
+						<h1>Testing onew iwnef</h1>
+						<p>ionsd'f</p>
+				  	</article>
+			  						<article >
+						<h1>something weird</h1>
+						<p>and it don't look good</p>
+				  	</article>
+			  				</div><!--/span-->
+		</div><!--/row-->
+	  	<hr>
+		<footer>
+			<p>&copy; Company 2012</p>
+		</footer>
+	</div><!--/.fluid-container-->
+
+	<div class="modal hide fade" id="belvedereModal">
+	  <div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	    <h3>Modal header</h3>
+	  </div>
+	  <div class="modal-body">
+	    <p>One fine body…</p>
+	  </div>
+	  <div class="modal-footer">
+	    <a href="#" class="btn">Close</a>
+	    <a href="#" class="btn btn-primary">Save changes</a>
+	  </div>
+	</div>
+
+	<div id="loginModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	    <h3 id="myModalLabel">Login</h3>
+	  </div>
+	  <div class="modal-body">
+	    <p>
+	    	<form class="form-inline" id="loginForm">
+	  			<input type="text" class="input-large" name="user" placeholder="Email">
+				<input type="password" class="input-large"  name="password" placeholder="Password">
+		</p>
+	  </div>
+	  <div class="modal-footer">
+	    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+	    <input type="submit" class="btn btn-primary" id="loginButton" value="Login">
+	    </form>
+
+	  </div>
+	</div>
+
+	<!-- Le javascript
+	================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="http://code.jquery.com/jquery.min.js"></script>
+	<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-transition.js"></script>
+	<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-alert.js"></script>
+	<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-modal.js"></script>
+	<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-dropdown.js"></script>
+	<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-scrollspy.js"></script>
+	<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-tab.js"></script>
+	<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-tooltip.js"></script>
+	<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-popover.js"></script>
+	<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-button.js"></script>
+	<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-collapse.js"></script>
+	<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-carousel.js"></script>
+	<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-typeahead.js"></script>
+	<script src="ui/js/jquery.belvedere.js"></script>
+
+	<script>
+	$(document).ready(function() {
+
+		$('#loginForm').submit( functon(event){
+			event.preventDefault();
+			console.log("submitting form...");
+			return false;
+		});
+		
+	});
+	</script>
+
+</body>
+</html>

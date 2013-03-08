@@ -1,0 +1,177 @@
+(function($) {
+	    $.fn.readmeConsole = function(eval, loginFunction, options) {
+	        if ($('body').data('readmeConsole')) {
+	            return $('body').data('readmeConsole').terminal;
+	        }
+	        this.addClass('readme-console');
+	        options = options || {};
+	        var settings = {
+	            prompt: '$ ',
+	            name: 'readme',
+	            height: 100,
+	            enabled: false,
+	            greetings: 'README Console',
+	            login: loginFunction
+	        };
+	        if (options) {
+	            $.extend(settings, options);
+	        }
+	        this.append('<div class="td"></div>');
+	        var self = this;
+	        self.terminal = this.find('.td').terminal(eval, settings);
+	        var focus = false;
+	        $(document.documentElement).keypress(function(e) {
+	            if (e.which == 96) {
+	                self.slideToggle('fast');
+	                self.terminal.set_command('');
+	                self.terminal.focus(focus = !focus);
+	                self.terminal.attr({
+	                    scrollBottom: self.terminal.attr("scrollHeight")
+	                });
+	            }
+	        });
+	        $('body').data('readmeConsole', this);
+	        this.hide();
+	        return self;
+	    };
+	})(jQuery);
+
+	//--------------------------------------------------------------------------
+
+
+	
+
+	var ReadmeConsole = function() {
+		this.terminal = null;
+	}
+	
+	ReadmeConsole.prototype.touch = function (title) {
+		console.log("title: " + title);
+		if (title != "") 
+			console.log("creating post: "  + title);
+		else 
+			console.log("creating empty post");
+		this.createTouch();
+	}
+
+	ReadmeConsole.prototype.login = function(username, password, terminalCallback) {
+		var url = "rpc";
+		var request = $.json_stringify({
+           'jsonrpc': '2.0', 
+           'method': "login",
+           'params': new Array(username,password), 
+           'id': 1
+       });
+		var rpcCallback = function(response) {
+			if (response.result != null) {
+				console.log("%o", tilda);
+				this.terminal.set_prompt(response.result + "@fond $ ");
+			}
+			terminalCallback(response.result);			
+		};
+		$.ajax({
+  			type: "POST",
+  			url: url,
+  			data: request,
+  			success: rpcCallback,
+  			contentType: 'application/json',
+            dataType: 'json',
+		});
+		//callback(username);
+	}
+
+	ReadmeConsole.prototype.help = function() {
+		var rpcCallback = function(response) {
+			this.terminal.echo(response.result);
+		};
+		this.sendrpc('help',rpcCallback);
+	}
+
+	ReadmeConsole.prototype.whoami= function() {
+		var callback = function (response) {
+			var results = response.result;
+			for(result in results)
+			this.terminal.echo(result + " : " + results[result]);
+		};
+		this.sendrpc('whoami', callback);
+	}
+
+
+
+	ReadmeConsole.prototype.sendrpc = function(method, callback, params) {
+		if (params == null) {
+			params = [];
+		}
+		var url = "rpc";
+		var request = $.json_stringify({
+           'jsonrpc': '2.0', 
+           'method': method,
+           'params': params, 
+           'id': 1
+       });
+
+		$.ajax({
+  			type: "POST",
+  			url: url,
+  			data: request,
+  			success: callback,
+  			contentType: 'application/json',
+            dataType: 'json',
+		});
+	}
+
+
+	ReadmeConsole.prototype.createTouch = function() {
+		this.editor();
+	}
+
+	ReadmeConsole.prototype.editor = function(args) {
+		var editor = $('#readme-editor');
+		var bodyheight = $(document).height();
+    	$("#readme-editor").height(bodyheight-$('#tilda').height);
+		if (args[0] == "-h") 
+			$(editor).slideUp();
+		else {
+			$(editor).slideDown();
+		}
+
+	} 
+	
+	var myConsole = new ReadmeConsole();
+
+	jQuery(document).ready(function($) {
+		$(window).resize(function() {
+    		var bodyheight = $(document).height();
+    		$("#readme-editor").height(bodyheight-$('#readme-console').height);
+    		    	console.log($('#readme-editor').height());
+
+    	});
+
+	    myConsole.terminal = $('#readme-console').readmeConsole(function(input, terminal) {
+	    	//extract the command from the input
+	    	//and create an args string
+	    	var args = input.match(/\S+/g);
+	    	console.log("%o", terminal);
+	    	var command = args.shift();
+	    	switch(command) {
+	    		case 'login': 
+	    			myConsole.terminal.logout();
+	    			break;
+	    		case 'touch':
+	    			myConsole.touch(args.join(" "));
+	    			break;
+	    		case 'help':
+	    			myConsole.help();
+	    			break;
+	    		case 'whoami':
+	    			myConsole.whoami();
+	    			break;
+	    		case 'editor':
+	    			myConsole.editor(args);
+	    			break;
+	    		default:
+	    			terminal.error("Command not recognized");
+	    			break;
+	    	}
+	   	});
+	});
