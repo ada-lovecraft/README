@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Bootstrap, from Twitter</title>
+	<title>README</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="">
 	<meta name="author" content="">
@@ -36,7 +36,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</a>
-				<a class="brand" href="#">README <span class="byline"> a blog platform for developers</span></a>		
+				<a class="brand" href="#">README <span class="byline"> dot text</span></a>		
 			</div>
 		</div>
 	</div>
@@ -57,9 +57,10 @@
 				<div class="sidebar-nav">
 					<div class="well">
 						<ul class="nav nav-list"> 
-						  <li class="nav-header">Admin Menu</li>        
+						  <li class="nav-header">Admin Menu</li>     
+						  <li><a href=""><i class="icon-Home"></i> Home</a></li>
 						  <li><a href="admin/newpost"><i class="icon-pencil"></i> New Post</a></li>
-						  <li><a href="admin/newuser"><i class="icon-pencil"></i> New User</a></li>
+						  <li><a href="admin/newuser"><i class="icon-user"></i> New User</a></li>
 
 						  <li><a href="logout"><i class="icon-share"></i> Logout</a></li>
 						</ul>
