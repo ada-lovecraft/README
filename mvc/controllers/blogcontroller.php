@@ -4,6 +4,7 @@ namespace Controllers;
 class BlogController {
 	
     static function show($f3) {
+    	/*
     	include_once "markdown.php";
     	$connection = \Services\DBService::getConnection();
 		$posts = new \DB\SQL\Mapper($connection,'posts');
@@ -19,22 +20,9 @@ class BlogController {
 		}
 		
 		$f3->set('latestPosts',$list);
-		//echo \Template::instance()->render('views/index.htm');		
-	}
-
-
-	static function getPosts($f3) {
-		$connection = \Services\DBService::getConnection();
-		$posts = new \DB\SQL\Mapper($connection,'posts');
-		$posts->authorName = 'SELECT username FROM users WHERE posts.author=users.id';
-		$posts->html =Markdown($posts->body);
-		$latest = $posts->load();
-		$postList = array();
-		for($i = 0; $i<$latest->count(); $i++) {
-			$postList[] = $latest->cast();
-			$latest->skip();
-		}
-		echo json_encode($postList);
+		//echo \Template::instance()->render('views/index.htm');
+		*/
+		echo "show";		
 	}
 
 	static function login($f3) {
@@ -55,16 +43,20 @@ class BlogController {
 	}
 
 	static function beforeRoute($f3) {
+		/*
 		$auth = $f3->get('SESSION.auth');
 		if ($auth == NULL) {
 			$f3->set('SESSION.auth',null);
 		}
+		*/
 	}
 
 	static function afterRoute($f3)
 	{
+		/*
 		$f3->set('SESSION.success',null);
 		$f3->set('SESSION.fail',null);
+		*/
 	}
 
 
