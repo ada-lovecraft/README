@@ -56,7 +56,9 @@ class BlogController {
 
 	static function beforeRoute($f3) {
 		$auth = $f3->get('SESSION.auth');
-		echo var_dump($auth);
+		if ($auth == NULL) {
+			$f3->set('SESSION.auth',null);
+		}
 	}
 
 	static function afterRoute($f3)
