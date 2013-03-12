@@ -6,4 +6,8 @@ class Utils {
         $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]);
         return urldecode($protocol . "://" . $_SERVER['SERVER_NAME'] . $port . F3::get('BASE').'/');
     }
+
+    public static function stripPunctuation($string) {
+    	return preg_replace("[\-!@#$%^&*()_{}|=+\\'\":;<>.,?/\[\]]","",$string);
+    }
 }

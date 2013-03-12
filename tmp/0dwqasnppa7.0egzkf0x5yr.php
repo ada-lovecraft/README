@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<base href="{{ @\Utils::getBaseUrl()}}" />
+<base href="<?php echo @\Utils::getBaseUrl(); ?>" />
 <html lang="en">
 <head>
 	<meta charset="utf-8">
@@ -36,51 +36,83 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</a>
-				<a class="brand" href="#">README <span class="byline"> dot text</span></a>		
+				<a class="brand" href="#">README <span class="byline"> a blog platform for developers</span></a>		
 			</div>
 		</div>
 	</div>
 
 	<div class="container-fluid">
-		 <check if="{{ isset(@SESSION.success)}}">
-            <div class="alert alert-success">
-                <a class="close" data-dismiss="alert" href="#">x</a>{{@SESSION.success}}
-            </div>      
-        </check>
-        <check if="{{ isset(@SESSION.fail)}}">
-            <div class="alert alert-error">
-                <a class="close" data-dismiss="alert" href="#">x</a>{{@SESSION.fail}}
-            </div>      
-        </check>
-		<div class="row-fluid">
-			<div class="span2">
-				<div class="sidebar-nav">
-					<div class="well">
-						<ul class="nav nav-list"> 
-						  <li class="nav-header">Admin Menu</li>     
-						  <li><a href=""><i class="icon-home"></i> Home</a></li>
-						  <li><a href="admin/newpost"><i class="icon-pencil"></i> New Post</a></li>
-						  <li><a href="admin/newuser"><i class="icon-user"></i> New User</a></li>
-
-						  <li><a href="logout"><i class="icon-share"></i> Logout</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="span9">
-				heres some other swtuff that happened
-			</div>
-		</div><!--/row-->
+		<div class="row">
+		    <div class="span4 offset4">
+		      <div class="well">
+		        <legend>Sign in to ReadMe</legend>
+		        <form method="POST" action="login" accept-charset="UTF-8">
+			        <?php if (isset($SESSION['fail'])): ?>
+			            <div class="alert alert-error">
+			                <a class="close" data-dismiss="alert" href="#">x</a><?php echo $SESSION['fail']; ?>
+			            </div>      
+			        <?php endif; ?>
+		            <input class="span3" placeholder="Username" type="text" name="username">
+		            <input class="span3" placeholder="Password" type="password" name="password"> 
+		            <label class="checkbox">
+		                <input type="checkbox" name="remember" value="1"> Remember Me
+		            </label>
+		            <button class="btn-info btn" type="submit">Login</button>      
+		        </form>    
+		      </div>
+		    </div>
+		</div>
 	  	<hr>
 		<footer>
 			<p>&copy; 3Bound Studios 2013</p>
 		</footer>
 	</div><!--/.fluid-container-->
 
-	
+	<div id="loginModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	    <h3 id="myModalLabel">Login</h3>
+	  </div>
+	  <div class="modal-body">
+	    <p>
+	    	<form class="form-inline" id="loginForm" action="login">
+	  			<input type="text" class="input-large" name="user" placeholder="Email">
+				<input type="password" class="input-large"  name="password" placeholder="Password">
+		</p>
+			<div class="alert alert-error hide" id="loginFailure">
+			</div>
+	  </div>
+	  <div class="modal-footer">
+	    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+	    <input type="submit" class="btn btn-primary" id="loginButton" value="Login">
+	    </form>
+
+	  </div>
+	</div>
 
 
-	
+	<div id="editorModal" class="modal hide fade" tabindex="-1" role="editor" aria-labelledby="Editor Modal" aria-hidden="true">
+	  <div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	    <h3 id="myModalLabel">Create a post</h3>
+	  </div>
+	  <div class="modal-body">
+	  		<form class="form-horizontal">
+	  			<div class="control-group">
+	  				<textarea class="span6" rows="8" name="preview" enabled="false"></textarea>
+	  			</div>
+	  			<div class="control-group">
+					<textarea rows="8" name="editor" enabled="true" class="span6"></textarea>
+				</div>
+				<div class="control-group">
+					<button class="btn btn-small" data-dismiss="modal" aria-hidden="true">Close</button>
+	  				<input type="submit" class="btn btn-primary btn-small" id="loginButton" value="Post">
+	  			</div>
+	  		</form>
+			
+
+	  <div class="modal-footer">
+	  </div>
 	</div>
 
 
@@ -101,6 +133,11 @@
 	<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-carousel.js"></script>
 	<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-typeahead.js"></script>
 	<script src="ui/js/jquery.belvedere.js"></script>
+
+	<script>
+
+	
+	</script>
 
 </body>
 </html>

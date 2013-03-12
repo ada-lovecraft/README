@@ -12,6 +12,8 @@ $f3->route('GET /blog/posts', 'Controllers\BlogController::getPosts');
 $f3->route('GET /admin', 'Controllers\AdminController::index');
 $f3->route('GET /admin/newpost', 'Controllers\AdminController::createPost');
 $f3->route('POST /admin/newpost', 'Controllers\AdminController::savePost');
+$f3->route('POST /admin/newdraft [ajax]', 'Controllers\AdminController::saveNewDraft');
+
 $f3->route('GET /admin/newuser', 'Controllers\AdminController::createUser');
 $f3->route('POST /admin/newuser', 'Controllers\AdminController::saveUser');
 $f3->route('GET /edit/@title', 'Controllers\AdminController::editPost');

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<base href="{{ @\Utils::getBaseUrl()}}" />
+<base href="<?php echo @\Utils::getBaseUrl(); ?>" />
 <html lang="en">
 <head>
 	<meta charset="utf-8">
@@ -42,16 +42,16 @@
 	</div>
 
 	<div class="container-fluid">
-		 <check if="{{ isset(@SESSION.success)}}">
+		 <?php if (isset($SESSION['success'])): ?>
             <div class="alert alert-success">
-                <a class="close" data-dismiss="alert" href="#">x</a>{{@SESSION.success}}
+                <a class="close" data-dismiss="alert" href="#">x</a><?php echo $SESSION['success']; ?>
             </div>      
-        </check>
-        <check if="{{ isset(@SESSION.fail)}}">
+        <?php endif; ?>
+        <?php if (isset($SESSION['fail'])): ?>
             <div class="alert alert-error">
-                <a class="close" data-dismiss="alert" href="#">x</a>{{@SESSION.fail}}
+                <a class="close" data-dismiss="alert" href="#">x</a><?php echo $SESSION['fail']; ?>
             </div>      
-        </check>
+        <?php endif; ?>
 		<div class="row-fluid">
 			<div class="span2">
 				<div class="sidebar-nav">

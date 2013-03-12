@@ -6,9 +6,9 @@ class AdminController {
 
 
 	static function doLogin($f3) {
-		$username = \Services\UserService::login($f3->get('POST.username'),$f3->get('POST.password'));
+		$user = \Services\UserService::login($f3->get('POST.username'),$f3->get('POST.password'));
 		if ($username != null ) {
-			$f3->set('SESSION.auth', $username);
+			$f3->set('SESSION.auth', $user);
 			$f3->set('SESSION.success',"You have successfully logged in");
 			$f3->reroute('/admin');	
 		} else {
@@ -33,18 +33,67 @@ class AdminController {
 	}
 
 	static function createPost($f3) {
+		$connection = \Services\DBService::getConnection();
+		$posts = new \DB\SQL\Mapper($connection,'posts');
+		//$posts->html =Markdown($posts->body);
+		$list = $posts->find('status="draft"',array('order'=>'id DESC'));
+		$f3->set('newPostId', time());
+		$f3->set('drafts',$list);
 		echo \Template::instance()->render('views/admin/createPost.htm');		
+	}
+
+	static function saveNewDraft($f3) {
+		$connection = \Services\DBService::getConnection();
+		$newPost = $f3->get('POST.post');
+		$titleLine = strtok($newPost, "\n");
+		$slug = preg_replace("/[\s]+/", "-", \Utils::stripPunctuation($titleLine));
+		$user = $f3->get('SESSION.auth');
+
+		$post=new \DB\SQL\Mapper($connection,'posts');
+
+		$post->slug = strtolower($slug);
+		$post->body = $f3->get('POST.post');
+		$post->title = $titleLine;
+		$post->author = $user['id'];
+		$post->save();
+		echo json_encode($post->cast());
+	}
+
+	static function saveDraft($f3) {
+		$connection = \Services\DBService::getConnection();
+		$newPost = $f3->get('POST.post');
+		$titleLine = strtok($newPost, "\n");
+		$slug = preg_replace("/[\s]+/", "-", \Utils::stripPunctuation($titleLine));
+		$user = $f3->get('SESSION.auth');
+
+		$posts =new \DB\SQL\Mapper($connection,'posts');
+		$post = $post->load('id='.$f3->get('draftid')); 
+
+		$post->slug = strtolower($slug);
+		$post->body = $f3->get('POST.post');
+		$post->title = $titleLine;
+		$post->author = $user['id'];
+		$post->save();
+	}
+
+
+	static function updateDraft($f3) {
+
 	}
 
 	static function savePost($f3) {
 			$connection = \Services\DBService::getConnection();
 			$newPost = $f3->get('POST.post');
 			$titleLine = strtok($newPost, "\n");
-			$title = preg_replace("/[^a-zA-Z0-9]+/", "-", preg_replace("/#/","",$titleLine));
+			$slug = preg_replace("/[\s]+/", "-", \Utils::stripPunctuation($titleLine));
+			$user = $f3->get('SESSION.auth');
+
 			$post=new \DB\SQL\Mapper($connection,'posts');
 
-			$post->title = strtolower($title);
+			$post->slug = strtolower($slug);
 			$post->body = $f3->get('POST.post');
+			$post->title = $titleLine;
+			$post->author = $user['id'];
 			$post->save();
 			$f3->set('SESSION.success','<a href="/'.$post->title.'">Your post</a> was successfully saved');
 			$f3->reroute('/admin');

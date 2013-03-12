@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<base href="{{ @\Utils::getBaseUrl()}}" />
+<base href="<?php echo @\Utils::getBaseUrl(); ?>" />
 <html lang="en">
 <head>
 	<meta charset="utf-8">
@@ -42,16 +42,16 @@
 	</div>
 
 	<div class="container-fluid">
-		 <check if="{{ isset(@SESSION.success)}}">
+		 <?php if (isset($SESSION['success'])): ?>
 	            <div class="alert alert-success">
-	                <a class="close" data-dismiss="alert" href="#">x</a>{{@SESSION.success}}
+	                <a class="close" data-dismiss="alert" href="#">x</a><?php echo $SESSION['success']; ?>
 	            </div>      
-	        </check>
-	        <check if="{{ isset(@SESSION.fail)}}">
+	        <?php endif; ?>
+	        <?php if (isset($SESSION['fail'])): ?>
 	            <div class="alert alert-error">
-	                <a class="close" data-dismiss="alert" href="#">x</a>{{@SESSION.fail}}
+	                <a class="close" data-dismiss="alert" href="#">x</a><?php echo $SESSION['fail']; ?>
 	            </div>      
-	        </check>
+	        <?php endif; ?>
 		<div class="row">
 			<div class="span2">
 				<div class="sidebar-nav">
@@ -68,10 +68,10 @@
 				<div class="span9 well">
 
 					<ul id="editorTabs" class="nav nav-tabs">
-					 	<li id="newPostTab" class="active"><a href="#editor__newPost_{{@newPostId}}" data-newpost="true" data-toggle="tab">New</a></li>
-				  		<repeat group="{{ @drafts }}" value="{{ @draft }}">
-							<li><a href="#tab__{{@draft.slug}}" data-newpost="false" data-draftid="{{@draft.id}}" data-draftslug="{{@draft.slug}}" data-toggle="tab">{{@draft.title}}</a></li>
-				  		</repeat>
+					 	<li id="newPostTab" class="active"><a href="#editor__newPost_<?php echo $newPostId; ?>" data-newpost="true" data-toggle="tab">New</a></li>
+				  		<?php foreach (($drafts?:array()) as $draft): ?>
+							<li><a href="#tab__<?php echo $draft['slug']; ?>" data-newpost="false" data-draftid="<?php echo $draft['id']; ?>" data-draftslug="<?php echo $draft['slug']; ?>" data-toggle="tab"><?php echo $draft['title']; ?></a></li>
+				  		<?php endforeach; ?>
 					</ul>
 
 
@@ -80,12 +80,12 @@
 				   	</form>
 
 				   	<div class="hide" id="postHolders">
-				   	<repeat group="{{@drafts}}" value="{{@draft}}">
-				   		<div class="hide" id="content__{{@draft.slug}}">{{@draft.body}}</div>
-				   	</repeat>
+				   	<?php foreach (($drafts?:array()) as $draft): ?>
+				   		<div class="hide" id="content__<?php echo $draft['slug']; ?>"><?php echo $draft['body']; ?></div>
+				   	<?php endforeach; ?>
 				   </div>
 
-				   	<div class="tab-pane active" id="newPost_{{@newPostId}}" style="height: 600px; margin-bottom: 20px;"></div>
+				   	<div class="tab-pane active" id="newPost_<?php echo $newPostId; ?>" style="height: 600px; margin-bottom: 20px;"></div>
 				   	<a href="#" role="button" class="btn btn-primary" id="saveButton">Save</a>
   				</div>
 			</div>
@@ -124,10 +124,10 @@
 	<script>
 	var editors = new Array();
 	var editor = null;
-	var currentPost = 'newPost_{{@newPostId}}';
+	var currentPost = 'newPost_<?php echo $newPostId; ?>';
 	var opts = {
 		basePath: '../ui',
-		container: 'newPost_{{@newPostId}}',
+		container: 'newPost_<?php echo $newPostId; ?>',
 		file: {
 			autoSave: 5000
 		}
@@ -146,7 +146,7 @@
 	  	console.log(draftSlug);
 	  	editor.importFile(draftSlug,$('#content__' + draftSlug).text()); 
 	  } else {
-	  	editor.open('newPost_{{@newPostId}}');
+	  	editor.open('newPost_<?php echo $newPostId; ?>');
 	  }
 	});
 
@@ -167,7 +167,7 @@
 
 
   	function editorSave(evt) {
-  		if (currentPost == 'newPost_{{@newPostId}}' && evt.content != "" && evt.content.indexOf('\n') != -1) {
+  		if (currentPost == 'newPost_<?php echo $newPostId; ?>' && evt.content != "" && evt.content.indexOf('\n') != -1) {
   			//ajax save draft and rename file
 
   			var data = {
@@ -182,7 +182,7 @@
   	function addNewTab(data,textStatux,jqXHR) {
   		console.log(data);
   		var obj = jQuery.parseJSON(data);
-  		editor.rename('newPost_{{@newPostId}}', obj.slug);
+  		editor.rename('newPost_<?php echo $newPostId; ?>', obj.slug);
   		var tab = $('#newPostTab');
   		var newTab = $(tab).clone(true);
   		 $(newTab).toggleClass('active');

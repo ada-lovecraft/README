@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<base href="{{ @\Utils::getBaseUrl()}}" />
+<base href="<?php echo @\Utils::getBaseUrl(); ?>" />
 <html lang="en">
 <head>
 	<meta charset="utf-8">
@@ -42,45 +42,66 @@
 	</div>
 
 	<div class="container-fluid">
-		 <check if="{{ isset(@SESSION.success)}}">
-            <div class="alert alert-success">
-                <a class="close" data-dismiss="alert" href="#">x</a>{{@SESSION.success}}
-            </div>      
-        </check>
-        <check if="{{ isset(@SESSION.fail)}}">
-            <div class="alert alert-error">
-                <a class="close" data-dismiss="alert" href="#">x</a>{{@SESSION.fail}}
-            </div>      
-        </check>
 		<div class="row-fluid">
+	        <?php if (isset($SESSION['success'])): ?>
+	            <div class="alert alert-success fade">
+	                <a class="close" data-dismiss="alert" href="#">x</a><?php echo $SESSION['success']; ?>
+	            </div>      
+	        <?php endif; ?>
+	        <?php if (isset($SESSION['fail'])): ?>
+	            <div class="alert alert-error fade">
+	                <a class="close" data-dismiss="alert" href="#">x</a><?php echo $SESSION['fail']; ?>
+	            </div>      
+	        <?php endif; ?>
 			<div class="span2">
-				<div class="sidebar-nav">
-					<div class="well">
-						<ul class="nav nav-list"> 
-						  <li class="nav-header">Admin Menu</li>     
-						  <li><a href=""><i class="icon-home"></i> Home</a></li>
-						  <li><a href="admin/newpost"><i class="icon-pencil"></i> New Post</a></li>
-						  <li><a href="admin/newuser"><i class="icon-user"></i> New User</a></li>
-
-						  <li><a href="logout"><i class="icon-share"></i> Logout</a></li>
-						</ul>
-					</div>
+				<div class="well sidebar-nav">
+					<ul class="nav nav-list">
+						<li><a href="#">Archive</a></li>
+						<?php if ($SESSION['auth']): ?>
+							
+								<li><a href="admin">Admin</a></li>
+								<li><a href="logout">Logout</a></li>
+							
+							<?php else: ?>
+								<li><a href="login">Login</a></li>
+							
+						<?php endif; ?>
+						<!-- page list -->
+					</ul>
+				</div><!--/.well -->
+			</div><!--/span-->
+			<div class="span10" id="content">
+				<div class="alert alert-success hide" id="successAlert">
+					  <button type="button" class="close" data-dismiss="alert">&times;</button>
+					  <p></p>
 				</div>
-			</div>
-			<div class="span9">
-				heres some other swtuff that happened
-			</div>
+				<div class="alert alert-error hide" id="errorAlert">
+					  <button type="button" class="close" data-dismiss="alert">&times;</button>
+					  <p></p>
+				</div>
+				
+				<?php foreach (($latestPosts?:array()) as $post): ?>
+					<article >
+						<?php echo $post['body']; ?>
+						
+						<p>
+					    	<i class="icon-user"></i> <a href="#"><?php echo $post['authorName']; ?></a> 
+					    	| <i class="icon-calendar"></i> <?php echo $post['created']; ?>
+						</p>
+						<?php if ($SESSION['auth']): ?>
+							<p>
+								<a href="edit/<?php echo $post['title']; ?>">Edit</a> 
+							</p>
+						<?php endif; ?>
+				  	</article>
+			  	<?php endforeach; ?>
+			</div><!--/span-->
 		</div><!--/row-->
 	  	<hr>
 		<footer>
 			<p>&copy; 3Bound Studios 2013</p>
 		</footer>
 	</div><!--/.fluid-container-->
-
-	
-
-
-	
 	</div>
 
 

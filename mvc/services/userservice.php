@@ -17,7 +17,7 @@ class UserService {
 		$authObj = self::$auth->login($username,$saltedpw);
 		if ($authObj == true) {
 			self::$user = self::$userdb->load(array('username=?', $username));
-			return self::$user->username;
+			return self::$user->cast();
 		} else {
 			return null;
 		}		
