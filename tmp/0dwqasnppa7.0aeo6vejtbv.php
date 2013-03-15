@@ -74,11 +74,6 @@
 				  		<?php endforeach; ?>
 					</ul>
 
-
-  					<form  id="editorForm" method="POST">
-				   		<textarea id="formText" name="post"></textarea>
-				   	</form>
-
 				   	<div class="hide" id="postHolders">
 				   	<?php foreach (($drafts?:array()) as $draft): ?>
 				   		<div class="hide" id="content__<?php echo $draft['slug']; ?>"><?php echo $draft['body']; ?></div>

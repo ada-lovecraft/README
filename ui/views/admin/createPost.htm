@@ -74,11 +74,6 @@
 				  		</repeat>
 					</ul>
 
-
-  					<form  id="editorForm" method="POST">
-				   		<textarea id="formText" name="post"></textarea>
-				   	</form>
-
 				   	<div class="hide" id="postHolders">
 				   	<repeat group="{{@drafts}}" value="{{@draft}}">
 				   		<div class="hide" id="content__{{@draft.slug}}">{{@draft.body}}</div>

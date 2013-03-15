@@ -10,7 +10,7 @@ class BlogController {
 		$posts = new \DB\SQL\Mapper($connection,'posts');
 		$posts->authorName = 'SELECT username FROM users WHERE posts.author=users.id';
 		//$posts->html =Markdown($posts->body);
-		$list = $posts->find('',array('order'=>'id DESC'));
+		$list = $posts->find('status="published"',array('order'=>'id DESC'));
 		$md=\Markdown::instance();
 		
 		foreach($list as $obj) {
