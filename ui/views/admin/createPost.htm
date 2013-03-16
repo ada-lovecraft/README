@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<base href="{{ @\Utils::getBaseUrl()}}" />
+<base href="{{Utilities\ReadmeUtils::getBaseUrl()}}" />
 <html lang="en">
 <head>
 	<meta charset="utf-8">
@@ -70,9 +70,10 @@
 					<ul id="editorTabs" class="nav nav-tabs">
 					 	<li id="newPostTab" class="active"><a href="#editor__newPost_{{@newPostId}}" data-newpost="true" data-toggle="tab">New</a></li>
 				  		<repeat group="{{ @drafts }}" value="{{ @draft }}">
-							<li><a href="#tab__{{@draft.slug}}" data-newpost="false" data-draftid="{{@draft.id}}" data-draftslug="{{@draft.slug}}" data-toggle="tab">{{@draft.title}}</a></li>
+							<li ><a href="#tab__{{@draft.slug}}" data-newpost="false" data-draftid="{{@draft.id}}" data-draftslug="{{@draft.slug}}" data-toggle="tab">{{@draft.title}}</a></li>
 				  		</repeat>
 					</ul>
+
 
 				   	<div class="hide" id="postHolders">
 				   	<repeat group="{{@drafts}}" value="{{@draft}}">
@@ -81,7 +82,14 @@
 				   </div>
 
 				   	<div class="tab-pane active" id="newPost_{{@newPostId}}" style="height: 600px; margin-bottom: 20px;"></div>
-				   	<a href="#" role="button" class="btn btn-primary" id="saveButton">Save</a>
+				   		<a href="#" role="button" class="btn btn-primary" id="saveButton">Save</a>
+				   		<a href="#" role="button" class="btn btn-warning pull-right" id="clearButton">Delete All Drafts</a>
+
+
+				   	<form class="hide" id="postForm" method="POST" action="admin/newpost">
+				   		<textarea id="postBody" name="postBody"><!-- --></textarea>
+				   		<input id="draftId" name="draftId"/>
+				   </form>
   				</div>
 			</div>
 		</div><!--/row-->
@@ -117,9 +125,13 @@
 	<script src="ui/js/epiceditor.min.js"></script>
 
 	<script>
+	//Terrible global stuff
+	//Written for speed
+	//Will refactor later.
 	var editors = new Array();
 	var editor = null;
 	var currentPost = 'newPost_{{@newPostId}}';
+	var refreshPost = true;
 	var opts = {
 		basePath: '../ui',
 		container: 'newPost_{{@newPostId}}',
@@ -129,64 +141,78 @@
 	};
 
 	editor = new EpicEditor(opts).load();
-	console.log(editor.getFiles());
+	editor.on('save', editorSave); //capture the autosave event from the editor
+
 
 	$('a[data-toggle="tab"]').on('shown', function (e) {
 	  var selectedDraft = e.target; // activated tab
 	  var newPost = $(selectedDraft).data('newpost');
-	  var draftId = $(selectedDraft).data('draftid');
+	  var draftId = $(selectedDraft).data('draftid'); 
 	  var draftSlug = $(selectedDraft).data('draftslug');
 	  if(!newPost) {
 	  	currentPost = draftId;
-	  	console.log(draftSlug);
-	  	editor.importFile(draftSlug,$('#content__' + draftSlug).text()); 
+	  	
+
+
+	  	//I want to refactor this using backbone
+	  	//Refreshing the post means that we'll pull the info from the dom instead of using what's already there.
+	  	// when we refresh the post, the cursor jumps to the top of the post. 
+	  	//If this is a new post, we don't want to interrupt the writing processs
+	  	if (refreshPost == true) { //refreshpost will always be true unless this is a newly created post
+	  		editor.importFile(draftSlug,$('#content__' + draftSlug).text()); 
+	  	} else {
+	  		refreshPost = true;
+	  	}
+
 	  } else {
 	  	editor.open('newPost_{{@newPostId}}');
 	  }
 	});
 
 
-	editor.on('save', editorSave);
-
-
 	$('#saveButton').click(function (evt) {
 		evt.preventDefault();
-		activeEditor = $('.tabpane .active');
-		console.log(activeEditor);
-		/*
-  		var theContent = editor.exportFile();
+		var theContent = editor.exportFile();
   		$('#postBody').val(theContent);
+  		$('#draftId').val(currentPost);
   		$('#postForm').submit();
-  		*/
+  	});
+
+  	$('#clearButton').click(function (evt) {
+		evt.preventDefault();
+		
   	});
 
 
   	function editorSave(evt) {
-  		if (currentPost == 'newPost_{{@newPostId}}' && evt.content != "" && evt.content.indexOf('\n') != -1) {
-  			//ajax save draft and rename file
-
-  			var data = {
-  				post: editor.exportFile()
-  			}
-  			$.post('admin/newdraft',data,addNewTab);
-  			//add new tab, and switch to it.
+  		if (evt.content != "" && evt.content.indexOf('\n') != -1) { 
+	  		if (currentPost == 'newPost_{{@newPostId}}') {
+	  			//ajax save draft and rename file
+	  			var data = {
+	  				postBody: editor.exportFile()
+	  			}
+	  			$.post('admin/newdraft',data,addNewTab);
+	  			//add new tab, and switch to it.
+	  		} else {
+	  			var data = {
+	  				postBody: editor.exportFile(),
+	  				draftId: currentPost
+	  			}
+	  			$.post('admin/updatedraft',data);
+	  		}
   		}
-  		console.log(evt);
+  		//console.log(evt);
   	}
 
-  	function addNewTab(data,textStatux,jqXHR) {
-  		console.log(data);
+  	function addNewTab(data,textStatus,jqXHR) {
   		var obj = jQuery.parseJSON(data);
   		editor.rename('newPost_{{@newPostId}}', obj.slug);
   		var tab = $('#newPostTab');
   		var newTab = $(tab).clone(true);
   		 $(newTab).toggleClass('active');
-
-  		$(tab).removeAttr();
   		var tabLink = $(tab).find('a');
-  		console.log(tabLink);
   		$(tabLink).attr('href','#tab__'+obj.slug);
-  		$(tabLink).data('newpost','false');
+  		$(tabLink).data('newpost',false);
   		$(tabLink).data('draftid', obj.id);
   		$(tabLink).data('draftslug',obj.slug);
   		$(tabLink).text(obj.title);
@@ -196,6 +222,10 @@
 			id: 'content__' + obj.slug,
 			text: obj.body
   		}).appendTo('#postHolders');
+
+		refreshPost = false;
+  		$(tabLink).trigger('shown');
+
   	}
 
 	</script>

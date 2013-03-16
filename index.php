@@ -1,23 +1,26 @@
 <?php
-
-
 $f3=require('lib/base.php');
 
 $f3->set('UI','ui/');
 $f3->set('DEBUG',3);
 
-$f3->set('AUTOLOAD','mvc/');
+$f3->set('AUTOLOAD','classes/');
+
+
 $f3->route('GET /', 'Controllers\BlogController::show');
 $f3->route('GET /blog/posts', 'Controllers\BlogController::getPosts');
 $f3->route('GET /admin', 'Controllers\AdminController::index');
 $f3->route('GET /admin/newpost', 'Controllers\AdminController::createPost');
 $f3->route('POST /admin/newpost', 'Controllers\AdminController::savePost');
+
 $f3->route('POST /admin/newdraft [ajax]', 'Controllers\AdminController::saveNewDraft');
+$f3->route('POST /admin/updatedraft [ajax]', 'Controllers\AdminController::updateDraft');
 
 $f3->route('GET /admin/newuser', 'Controllers\AdminController::createUser');
 $f3->route('POST /admin/newuser', 'Controllers\AdminController::saveUser');
-$f3->route('GET /edit/@title', 'Controllers\AdminController::editPost');
-$f3->route('POST /edit/@title', 'Controllers\AdminController::editSavePost');
+
+$f3->route('GET /edit/@slug', 'Controllers\AdminController::editPost');
+$f3->route('POST /edit/@slug', 'Controllers\AdminController::editSavePost');
 
 $f3->route('POST /login [ajax]', 'Controllers\AdminController::loginAjax');
 $f3->route('GET /login', 'Controllers\BlogController::login');

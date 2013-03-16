@@ -1,4 +1,5 @@
 <?php
+namespace Utilities;
 #
 # Markdown  -  A text-to-HTML conversion tool for web writers
 #

@@ -1,50 +1,37 @@
 
 
 /***** Custom *****/
+* {
+	font-family: Verdana, Helvetica, Arial;
+	font-size: 12px;
+	font-weight: normal;
 
+}
 .navbar .brand .byline {
 	font-size: smaller;
 }
-.readme-console {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1100;
-    border-top: 2px solid #333;
+
+body {
+	background: #333;
 }
 
 div#content article {
-	padding: 15px 45px 15px 45px;
 	margin-bottom: 30px;
-	font-size: 18px;
-	font-weight: 200;
-	line-height: 30px;
-	color: inherit;
-	background-color: #eeeeee;
-	-webkit-border-radius: 6px;
-	-moz-border-radius: 6px;
-	border-radius: 6px;
+	color: #FEFCF6;
+	padding-bottom: 20px;
+	border-bottom: 1px dashed #666;
 }
 
 div#content article p {
-	font-size: medium;
+	letter-spacing: 0em;
 }
 
-div#content article h1 {
-	margin-bottom: 0;
-	font-size: 30px;
-	line-height: 1;
-	letter-spacing: -1px;
-	color: inherit;
+div#content article p.metadata {
+	font-size: .8em;
 }
 
-div#readme-editor {
-	z-index: 1000;
-	position:fixed;
-	height:300px;
-	top:0px;
-	left:0px;
-	background-color: #413d43;
-	color: #aaa;
+div#content article h2 {
+	border-bottom: 1px dotted #ccc;
+	font-size: 1.2em;
+	font-weight: normal;
 }

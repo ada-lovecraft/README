@@ -35,7 +35,7 @@ class AdminController {
 	static function createPost($f3) {
 		$connection = \Services\DBService::getConnection();
 		$posts = new \DB\SQL\Mapper($connection,'posts');
-		//$posts->html =Markdown($posts->body);
+		//$posts->html =Markdown($posts->body`);
 		$list = $posts->find('status="draft"',array('order'=>'id DESC'));
 		$f3->set('newPostId', time());
 		$f3->set('drafts',$list);
@@ -44,66 +44,63 @@ class AdminController {
 
 	static function saveNewDraft($f3) {
 		$connection = \Services\DBService::getConnection();
-		$newPost = $f3->get('POST.post');
+		$newPost = $f3->get('POST.postBody');
 		$titleLine = strtok($newPost, "\n");
-		$slug = preg_replace("/[\s]+/", "-", \Utils::stripPunctuation($titleLine));
+		$slug = preg_replace("/[\s]+/", "-", \Utilities\ReadmeUtils::stripPunctuation($titleLine));
 		$user = $f3->get('SESSION.auth');
 
 		$post=new \DB\SQL\Mapper($connection,'posts');
 
 		$post->slug = strtolower($slug);
-		$post->body = $f3->get('POST.post');
-		$post->title = $titleLine;
+		$post->body = $f3->get('POST.postBody');
+		$post->title = trim(\Utilities\ReadmeUtils::stripPunctuation($titleLine));
 		$post->author = $user['id'];
 		$post->save();
+
 		echo json_encode($post->cast());
 	}
 
-	static function saveDraft($f3) {
-		$connection = \Services\DBService::getConnection();
-		$newPost = $f3->get('POST.post');
-		$titleLine = strtok($newPost, "\n");
-		$slug = preg_replace("/[\s]+/", "-", \Utils::stripPunctuation($titleLine));
-		$user = $f3->get('SESSION.auth');
-
-		$posts =new \DB\SQL\Mapper($connection,'posts');
-		$post = $post->load('id='.$f3->get('draftid')); 
-
-		$post->slug = strtolower($slug);
-		$post->body = $f3->get('POST.post');
-		$post->title = $titleLine;
-		$post->author = $user['id'];
-		$post->save();
-	}
-
-
 	static function updateDraft($f3) {
+		$connection = \Services\DBService::getConnection();
+		$posts = new \DB\SQL\Mapper($connection,'posts');
+		$newPost = $f3->get('POST.postBody');
+		$titleLine = strtok($newPost, "\n");
+		$slug = preg_replace("/[\s]+/", "-", \Utilities\ReadmeUtils::stripPunctuation($titleLine));
+		
+		$draft = $posts->load(array('id=?',$f3->get('POST.draftId')));
+		$draft->slug = strtolower($slug);
+		$draft->title = trim(\Utilities\ReadmeUtils::stripPunctuation($titleLine));
+		$draft->body = $f3->get('POST.postBody');
+		$draft->save();
+		echo json_encode($draft->cast());
 
 	}
 
 	static function savePost($f3) {
-			$connection = \Services\DBService::getConnection();
-			$newPost = $f3->get('POST.post');
-			$titleLine = strtok($newPost, "\n");
-			$slug = preg_replace("/[\s]+/", "-", \Utils::stripPunctuation($titleLine));
-			$user = $f3->get('SESSION.auth');
+		$connection = \Services\DBService::getConnection();
+		$posts = new \DB\SQL\Mapper($connection,'posts');
+		
+		$newPost = $f3->get('POST.postBody');
+		$titleLine = strtok($newPost, "\n");
+		$slug = preg_replace("/[\s]+/", "-", \Utilities\ReadmeUtils::stripPunctuation($titleLine));
+		Xdebug_break();
+		$post = $posts->load(array('id=?',$f3->get('POST.draftId')));
+		$post->slug = strtolower($slug);
+		$post->title = trim(\Utilities\ReadmeUtils::stripPunctuation($titleLine));
+		$post->body = $newPost;
+		$post->status = "published";
+		$post->save();
 
-			$post=new \DB\SQL\Mapper($connection,'posts');
+		$f3->set('SESSION.success','<a href="/' . $post->title . '">Your post</a> was successfully saved');
 
-			$post->slug = strtolower($slug);
-			$post->body = $f3->get('POST.post');
-			$post->title = $titleLine;
-			$post->author = $user['id'];
-			$post->save();
-			$f3->set('SESSION.success','<a href="/'.$post->title.'">Your post</a> was successfully saved');
-			$f3->reroute('/admin');
+		$f3->reroute('/admin');	
 	}
 
 
 	static function editPost($f3) {
 		$connection = \Services\DBService::getConnection();
 		$posts = new \DB\SQL\Mapper($connection,'posts');
-		$originalPost = $posts->load(array('title=?',$f3->get('PARAMS.title')));
+		$originalPost = $posts->load(array('slug=?',$f3->get('PARAMS.slug')));
 		$f3->set('originalPost',$originalPost->body);
 		echo \Template::instance()->render('views/admin/editPost.htm');		
 	}
@@ -111,10 +108,11 @@ class AdminController {
 	static function editSavePost($f3) {
 		$connection = \Services\DBService::getConnection();
 		$posts = new \DB\SQL\Mapper($connection,'posts');
-		$originalPost = $posts->load(array('title=?',$f3->get('PARAMS.title')));
+		$originalPost = $posts->load(array('slug=?',$f3->get('PARAMS.slug')));
 		$originalPost->body = $f3->get('POST.postBody');
+		$originalPost->status = "published";
 		$originalPost->save();
-		$f3->set('SESSION.success','<a href="/' . $originalPost->title . '">Your post</a> was successfully saved');
+		$f3->set('SESSION.success','&lt;a href="/' . $originalPost->slug . '">' . $originalPost->slug . '</a> was successfully saved');
 
 		$f3->reroute('/admin');	
 	}
