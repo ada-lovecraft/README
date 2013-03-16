@@ -125,8 +125,15 @@
 	<script src="ui/js/epiceditor.min.js"></script>
 
 	<script>
+
+	/***********************
+	TODO:
+		Use backbone to store information instead of the dom.
+	***********************/
+
+
 	//Terrible global stuff
-	//Written for speed
+	//Written for quick prototyping
 	//Will refactor later.
 	var editors = new Array();
 	var editor = null;
@@ -153,12 +160,8 @@
 	  	currentPost = draftId;
 	  	
 
-
-	  	//I want to refactor this using backbone
-	  	//Refreshing the post means that we'll pull the info from the dom instead of using what's already there.
-	  	// when we refresh the post, the cursor jumps to the top of the post. 
-	  	//If this is a new post, we don't want to interrupt the writing processs
-	  	if (refreshPost == true) { //refreshpost will always be true unless this is a newly created post
+	  	//Refreshing the post means that we'll pull the info from the dom instead of using what's already in the editor.
+	  	if (refreshPost == true) { //refreshpost will always be true unless this is a newly created tab
 	  		editor.importFile(draftSlug,$('#content__' + draftSlug).text()); 
 	  	} else {
 	  		refreshPost = true;
@@ -175,6 +178,15 @@
 		var theContent = editor.exportFile();
   		$('#postBody').val(theContent);
   		$('#draftId').val(currentPost);
+
+
+  		//clean all epiceditor files
+  		//this is for performance maintenance
+  		var drafts = editor.getFiles();
+  		for(var draft in drafts) {
+  			editor.remove(draft);
+  		}
+
   		$('#postForm').submit();
   	});
 

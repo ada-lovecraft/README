@@ -83,7 +83,6 @@ class AdminController {
 		$newPost = $f3->get('POST.postBody');
 		$titleLine = strtok($newPost, "\n");
 		$slug = preg_replace("/[\s]+/", "-", \Utilities\ReadmeUtils::stripPunctuation($titleLine));
-		Xdebug_break();
 		$post = $posts->load(array('id=?',$f3->get('POST.draftId')));
 		$post->slug = strtolower($slug);
 		$post->title = trim(\Utilities\ReadmeUtils::stripPunctuation($titleLine));
